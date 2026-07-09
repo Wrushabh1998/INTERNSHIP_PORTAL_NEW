@@ -17,14 +17,16 @@ class Database {
                 PDO::ATTR_EMULATE_PREPARES   => false,
             ];
             try {
-                $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET;
+                $portPart = (defined('DB_PORT') && DB_PORT !== '') ? ';port=' . DB_PORT : '';
+                $dsn = 'mysql:host=' . DB_HOST . $portPart . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET;
                 self::$instance = new PDO($dsn, DB_USER, DB_PASS, $options);
                 self::$instance->exec("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
             } catch (PDOException $e) {
                 // Check if error is 'Unknown database'
                 if ($e->getCode() == 1049 || str_contains($e->getMessage(), 'Unknown database')) {
                     try {
-                        $dsnNoDb = 'mysql:host=' . DB_HOST . ';charset=' . DB_CHARSET;
+                        $portPart = (defined('DB_PORT') && DB_PORT !== '') ? ';port=' . DB_PORT : '';
+                        $dsnNoDb = 'mysql:host=' . DB_HOST . $portPart . ';charset=' . DB_CHARSET;
                         $tempPdo = new PDO($dsnNoDb, DB_USER, DB_PASS, $options);
                         $tempPdo->exec("CREATE DATABASE IF NOT EXISTS `" . DB_NAME . "` CHARACTER SET " . DB_CHARSET . " COLLATE utf8mb4_unicode_ci");
                         
