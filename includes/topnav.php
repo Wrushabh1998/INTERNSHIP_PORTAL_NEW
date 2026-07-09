@@ -92,7 +92,7 @@ $profileUrl  = ($userRole === 'admin') ? SITE_URL . '/admin/profile.php' : SITE_
 <script>
 // Load notifications in panel on open
 document.getElementById('notif-btn')?.addEventListener('click', function () {
-    fetch('/INTERNSHIP_PORTAL_NEW/ajax/notifications.php?action=list&limit=8')
+    fetch((window.BASE_URL || '') + '/ajax/notifications.php?action=list&limit=8')
         .then(r => r.json())
         .then(data => {
             const list = document.getElementById('notif-list');
@@ -102,7 +102,7 @@ document.getElementById('notif-btn')?.addEventListener('click', function () {
                 return;
             }
             list.innerHTML = data.items.map(n => `
-                <div class="notif-item ${n.is_read == 0 ? 'unread' : ''}" onclick="window.location='${n.link || '/INTERNSHIP_PORTAL_NEW/student/notifications.php'}'">
+                <div class="notif-item ${n.is_read == 0 ? 'unread' : ''}" onclick="window.location='${n.link || ((window.BASE_URL || '') + '/student/notifications.php')}'" >
                     <span class="notif-dot" style="${n.is_read != 0 ? 'visibility:hidden' : ''}"></span>
                     <div class="notif-body">
                         <div class="notif-title">${n.title}</div>

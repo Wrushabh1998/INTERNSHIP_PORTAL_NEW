@@ -43,6 +43,9 @@ $bodyClass = $bodyClass ?? '';
 <!-- Font Awesome (icons) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+<!-- BASE_URL: injected server-side so JS always knows the correct root, regardless of host -->
+<script>window.BASE_URL = '<?= SITE_URL ?>';</script>
+
 <style>
 /* Inline critical: prevent FOUC */
 html[data-theme="dark"] { color-scheme: dark; }

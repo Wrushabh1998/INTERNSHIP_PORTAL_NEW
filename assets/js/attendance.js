@@ -50,7 +50,7 @@ const AttendanceCamera = (function () {
     }
 
     function doSubmit(formData, type, btn, origHTML) {
-        fetch('/INTERNSHIP_PORTAL_NEW/ajax/attendance.php', {
+        fetch((window.BASE_URL || '') + '/ajax/attendance.php', {
             method: 'POST',
             body: formData
         })

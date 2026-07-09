@@ -720,7 +720,7 @@ require_once BASE_PATH . '/includes/header.php';
 (function(){
     'use strict';
 
-    var AJAX_URL = '/INTERNSHIP_PORTAL_NEW/ajax/attendance.php';
+    var AJAX_URL = (window.BASE_URL || '') + '/ajax/attendance.php';
 
     function getCsrf(){
         var el = document.getElementById('att-csrf');

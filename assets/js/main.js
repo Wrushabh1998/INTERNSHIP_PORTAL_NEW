@@ -247,14 +247,14 @@
                 if (counter) counter.textContent = remaining;
                 if (remaining <= 0) {
                     clearInterval(interval);
-                    window.location.href = '/INTERNSHIP_PORTAL_NEW/logout.php?timeout=1';
+                    window.location.href = (window.BASE_URL || '') + '/logout.php?timeout=1';
                 }
             }, 1000);
             document.getElementById('session-extend')?.addEventListener('click', () => {
                 clearInterval(interval);
                 Modal.close('session-warning-modal');
                 // Ping server to extend
-                fetch('/INTERNSHIP_PORTAL_NEW/ajax/ping.php').catch(() => {});
+                fetch((window.BASE_URL || '') + '/ajax/ping.php').catch(() => {});
                 this.reset();
             });
         }
@@ -269,7 +269,7 @@
             setInterval(() => this.fetch(), 30000); // every 30s
         },
         fetch() {
-            fetch('/INTERNSHIP_PORTAL_NEW/ajax/notifications.php?action=count')
+            fetch((window.BASE_URL || '') + '/ajax/notifications.php?action=count')
                 .then(r => r.json())
                 .then(data => {
                     const badge = document.getElementById('notif-count');

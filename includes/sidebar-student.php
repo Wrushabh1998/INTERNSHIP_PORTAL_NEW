@@ -176,7 +176,7 @@ function sNavLink(string $file, string $icon, string $label, string $current, st
 <script>
 (function () {
     'use strict';
-    const AJAX_URL = '/INTERNSHIP_PORTAL_NEW/ajax/attendance.php';
+    const AJAX_URL = (window.BASE_URL || '') + '/ajax/attendance.php';
 
     function sbPunch(type) {
         const idMap = {
