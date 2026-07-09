@@ -1,0 +1,2 @@
+<?php
+// Hash setup completed.
