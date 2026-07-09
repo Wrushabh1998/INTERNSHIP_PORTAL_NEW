@@ -1,0 +1,68 @@
+# ─── Render Blueprint ─────────────────────────────────────────────────────────
+# https://render.com/docs/blueprint-spec
+services:
+  # ── Web Service (PHP/Apache via Docker) ──────────────────────────────────────
+  - type: web
+    name: interntrack-pro
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    branch: main
+
+    # Environment variables — override SITE_URL & DB credentials via Render Dashboard
+    envVars:
+      - key: APP_ENV
+        value: production
+
+      # Database — set these in Render Dashboard after creating the DB service
+      - key: DB_HOST
+        fromService:
+          name: interntrack-db
+          type: pserv
+          property: host
+
+      - key: DB_PORT
+        fromService:
+          name: interntrack-db
+          type: pserv
+          property: port
+
+      - key: DB_NAME
+        value: internship_portal
+
+      - key: DB_USER
+        fromService:
+          name: interntrack-db
+          type: pserv
+          property: user
+
+      - key: DB_PASS
+        fromService:
+          name: interntrack-db
+          type: pserv
+          property: password
+
+      - key: SITE_URL
+        value: https://interntrack-pro.onrender.com   # Update to your actual Render URL
+
+    healthCheckPath: /login.php
+
+  # ── MySQL-Compatible Database (Private Service) ───────────────────────────────
+  # NOTE: Render does not have managed MySQL. Use this private MySQL service via Docker.
+  - type: pserv
+    name: interntrack-db
+    runtime: docker
+    dockerfilePath: ./docker/mysql.Dockerfile
+    plan: free
+    region: oregon
+
+    envVars:
+      - key: MYSQL_ROOT_PASSWORD
+        generateValue: true
+      - key: MYSQL_DATABASE
+        value: internship_portal
+      - key: MYSQL_USER
+        value: interntrack
+      - key: MYSQL_PASSWORD
+        generateValue: true

@@ -5,15 +5,15 @@
  */
 
 // ─── Database Settings ────────────────────────────────────────────────────────
-define('DB_HOST',     'localhost');
-define('DB_NAME',     'internship_portal');
-define('DB_USER',     'root');
-define('DB_PASS',     '');
+define('DB_HOST',     getenv('DB_HOST')    ?: 'localhost');
+define('DB_NAME',     getenv('DB_NAME')    ?: 'internship_portal');
+define('DB_USER',     getenv('DB_USER')    ?: 'root');
+define('DB_PASS',     getenv('DB_PASS')    ?: '');
 define('DB_CHARSET',  'utf8mb4');
 
 // ─── Site Settings ────────────────────────────────────────────────────────────
 define('SITE_NAME',   'InternTrack Pro');
-define('SITE_URL',    'http://localhost/INTERNSHIP_PORTAL_NEW');
+define('SITE_URL',    rtrim(getenv('SITE_URL') ?: 'http://localhost/INTERNSHIP_PORTAL_NEW', '/'));
 if (!defined('BASE_PATH')) {
     define('BASE_PATH',   dirname(__DIR__));          // /INTERNSHIP_PORTAL_NEW
 }
@@ -58,7 +58,8 @@ define('RECORDS_PER_PAGE', 15);
 date_default_timezone_set('Asia/Kolkata');
 
 // ─── Environment ─────────────────────────────────────────────────────────────
-define('APP_ENV', 'development');   // 'production' in live
+$appEnv = getenv('APP_ENV') ?: 'development';
+define('APP_ENV', $appEnv);
 
 if (APP_ENV === 'development') {
     error_reporting(E_ALL);

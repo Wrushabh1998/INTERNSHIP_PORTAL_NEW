@@ -1,5 +1,37 @@
+# ─── Git ──────────────────────────────────────────────────────────────────────
 .git
 .gitignore
+.gitattributes
+
+# ─── Dev tools ────────────────────────────────────────────────────────────────
 node_modules
 vendor
+.env
+.env.*
 
+# ─── Local dev & debug scripts ────────────────────────────────────────────────
+verify_syntax.php
+test_db.php
+test_info.php
+generate_hashes.php
+get_hashes.php
+hashes.txt
+import_all_students.php
+database/check_admins.php
+database/check_gps_cols.php
+database/db_migrate.php
+database/seed_mentors.php
+database/syntax_check.php
+database/update_mentor_emails.php
+
+# ─── IDE & OS ─────────────────────────────────────────────────────────────────
+.vscode
+.idea
+*.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# ─── Logs & temp ──────────────────────────────────────────────────────────────
+*.log
+/uploads/*

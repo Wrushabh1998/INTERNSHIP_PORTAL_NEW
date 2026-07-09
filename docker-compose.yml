@@ -1,0 +1,65 @@
+version: "3.9"
+
+# ─── Local Docker Compose (mirrors Render production setup) ───────────────────
+services:
+
+  # ── PHP/Apache Web App ────────────────────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: interntrack_app
+    ports:
+      - "8080:80"
+    environment:
+      APP_ENV: development
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: internship_portal
+      DB_USER: interntrack
+      DB_PASS: secret
+      SITE_URL: http://localhost:8080
+    volumes:
+      - ./uploads:/var/www/html/uploads   # persist uploaded files locally
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── MySQL Database ─────────────────────────────────────────────────────────────
+  db:
+    image: mysql:8.0
+    container_name: interntrack_db
+    environment:
+      MYSQL_DATABASE: internship_portal
+      MYSQL_USER: interntrack
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: rootsecret
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    ports:
+      - "3307:3306"   # exposed on 3307 to avoid clashing with local XAMPP MySQL
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootsecret"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ── phpMyAdmin (optional, local only) ─────────────────────────────────────────
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: interntrack_pma
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: rootsecret
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+    restart: unless-stopped
+
+volumes:
+  mysql_data:

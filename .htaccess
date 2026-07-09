@@ -1,0 +1,46 @@
+Options -Indexes +FollowSymLinks
+Options -MultiViews
+
+# Enable rewrite engine
+RewriteEngine On
+
+# ─── Force HTTPS on Render ────────────────────────────────────────────────────
+# Render sets X-Forwarded-Proto header
+RewriteCond %{HTTP:X-Forwarded-Proto} =http
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# ─── Security Headers ─────────────────────────────────────────────────────────
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# ─── Protect sensitive files ──────────────────────────────────────────────────
+<FilesMatch "\.(sql|md|env|gitignore|dockerignore|yml|yaml|lock)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+<FilesMatch "^(Dockerfile|docker-compose\.yml|render\.yaml)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# ─── Cache static assets ──────────────────────────────────────────────────────
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png  "access plus 1 year"
+    ExpiresByType image/gif  "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType text/css   "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+</IfModule>
+
+# ─── Gzip compression ─────────────────────────────────────────────────────────
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
+    AddOutputFilterByType DEFLATE application/javascript application/json
+</IfModule>
